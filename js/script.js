@@ -1,31 +1,26 @@
 // Navbar toggle
 const hamburger = document.querySelector(".hamburger");
 const navLinks = document.querySelector(".nav-links");
-
-hamburger.addEventListener("click", () => {
+hamburger?.addEventListener("click", () => {
   navLinks.classList.toggle("active");
 });
 
-// Smooth scroll for anchor links
+// Smooth anchor scroll
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener('click', function (e) {
+  anchor.addEventListener("click", function (e) {
     e.preventDefault();
-    const section = document.querySelector(this.getAttribute('href'));
-    if (section) {
-      section.scrollIntoView({ behavior: 'smooth' });
-    }
+    const section = document.querySelector(this.getAttribute("href"));
+    section?.scrollIntoView({ behavior: "smooth" });
   });
 });
 
-// Alert on contact form submit
+// Contact form alert
 const form = document.querySelector("form");
-if (form) {
-  form.addEventListener("submit", function (e) {
-    e.preventDefault();
-    alert("Thank you! Your message has been submitted.");
-    form.reset();
-  });
-}
+form?.addEventListener("submit", function (e) {
+  e.preventDefault();
+  alert("Thank you! Your message has been submitted.");
+  form.reset();
+});
 
 // Auto testimonial slider
 const testimonials = [
@@ -33,7 +28,6 @@ const testimonials = [
   "Loved working with Payal. Truly professional and creative!",
   "If you're looking for style + substance, she's the one."
 ];
-
 let index = 0;
 function showTestimonial() {
   const tEl = document.querySelector("#testimonial-text");
@@ -42,16 +36,11 @@ function showTestimonial() {
     index = (index + 1) % testimonials.length;
   }
 }
-setInterval(showTestimonial, 4000); // Rotate every 4 seconds
+setInterval(showTestimonial, 4000);
 
-// Scroll Navbar Background
+// Navbar background scroll effect
 window.addEventListener("scroll", () => {
-  const navbar = document.querySelector(".navbar");
-  if (window.scrollY > 50) {
-    navbar.classList.add("scrolled");
-  } else {
-    navbar.classList.remove("scrolled");
-  }
+  document.querySelector(".navbar")?.classList.toggle("scrolled", window.scrollY > 50);
 });
 
 // Scroll progress bar
@@ -59,25 +48,19 @@ window.addEventListener("scroll", () => {
   const scrollBar = document.getElementById("scroll-bar");
   const scrollTop = window.scrollY;
   const docHeight = document.body.scrollHeight - window.innerHeight;
-  const scrollPercent = (scrollTop / docHeight) * 100;
-  scrollBar.style.width = scrollPercent + "%";
+  scrollBar.style.width = (scrollTop / docHeight) * 100 + "%";
 });
 
-// Typed Text Effect - FINAL
+// Typed text effect
 const textArray = ["Java Full Stack Developer", "Frontend Enthusiast", "Problem Solver", "Tech Explorer"];
 let typedText = document.querySelector(".typed-text");
-let i = 0, j = 0, currentText = "", isDeleting = false;
-
+let i = 0, j = 0, isDeleting = false;
 function typeEffect() {
   if (i < textArray.length) {
     if (!isDeleting && j <= textArray[i].length) {
-      currentText = textArray[i].substring(0, j++);
-      typedText.textContent = currentText;
-    }
-
-    if (isDeleting && j >= 0) {
-      currentText = textArray[i].substring(0, j--);
-      typedText.textContent = currentText;
+      typedText.textContent = textArray[i].substring(0, j++);
+    } else if (isDeleting && j >= 0) {
+      typedText.textContent = textArray[i].substring(0, j--);
     }
 
     if (!isDeleting && j === textArray[i].length) {
@@ -92,116 +75,91 @@ function typeEffect() {
   setTimeout(typeEffect, isDeleting ? 50 : 150);
 }
 
-// Popup + Typed Effect
-window.onload = function () {
-  // Show popup after 5 seconds
+// Popup and typed text init
+window.onload = () => {
+  // Show popup after delay (optional: remove if annoying)
   setTimeout(() => {
-    document.getElementById("popup").style.display = "flex";
+    const popup = document.getElementById("popup");
+    if (popup) popup.style.display = "flex";
   }, 5000);
 
-  // Start type effect
   typeEffect();
 };
 
+// Close popup
 function closePopup() {
   document.getElementById("popup").style.display = "none";
 }
 
-// Counter animation
-const counters = document.querySelectorAll('.count');
-const speed = 200;
-const animateCount = () => {
+// Counter animation (on scroll)
+const counters = document.querySelectorAll(".count");
+let hasCounted = false;
+function animateCount() {
   counters.forEach(counter => {
-    const updateCount = () => {
-      const target = +counter.getAttribute('data-target');
-      const count = +counter.innerText;
-      const increment = Math.ceil(target / speed);
-      if (count < target) {
-        counter.innerText = count + increment;
-        setTimeout(updateCount, 30);
+    const target = +counter.dataset.target;
+    const increment = Math.ceil(target / 200);
+    const update = () => {
+      const current = +counter.innerText;
+      if (current < target) {
+        counter.innerText = current + increment;
+        setTimeout(update, 30);
       } else {
         counter.innerText = target;
       }
     };
-    updateCount();
+    update();
   });
-};
-
-window.addEventListener('scroll', () => {
-  const statsSection = document.getElementById('stats');
-  const top = statsSection.getBoundingClientRect().top;
-  if (top < window.innerHeight - 100) {
+}
+window.addEventListener("scroll", () => {
+  const statsSection = document.getElementById("stats");
+  if (statsSection.getBoundingClientRect().top < window.innerHeight && !hasCounted) {
+    hasCounted = true;
     animateCount();
   }
 });
 
-// Back to Top button
+// Back to Top Button
 const backToTopBtn = document.getElementById("backToTop");
 window.addEventListener("scroll", () => {
   backToTopBtn.style.display = window.scrollY > 300 ? "block" : "none";
 });
-backToTopBtn.addEventListener("click", () => {
+backToTopBtn?.addEventListener("click", () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
-// Reveal Elements on Scroll
-function revealElements() {
-  const reveals = document.querySelectorAll(".reveal");
-  reveals.forEach((el) => {
-    const windowHeight = window.innerHeight;
-    const elementTop = el.getBoundingClientRect().top;
-    const elementVisible = 100;
-    if (elementTop < windowHeight - elementVisible) {
-      el.classList.add("active");
-    }
-  });
-}
-window.addEventListener("scroll", revealElements);
+// Reveal elements immediately (no scroll required)
+document.querySelectorAll(".reveal").forEach(el => el.classList.add("active"));
 
-// ScrollReveal library
+// ScrollReveal simplified (if needed at all)
 ScrollReveal({
-  distance: '60px',
+  distance: "60px",
   duration: 1000,
   delay: 200,
   reset: false
 });
-ScrollReveal().reveal('.hero h1, .hero p, .hero .btn', { origin: 'top' });
-ScrollReveal().reveal('.section h2', { origin: 'left' });
-ScrollReveal().reveal('.about-content, .service-cards, .project-grid, .contact form', {
-  origin: 'bottom',
-  interval: 100
+ScrollReveal().reveal(".hero h1, .hero p, .hero .btn", { origin: "top" });
+
+// Particles.js init
+particlesJS("particles-js", {
+  particles: {
+    number: { value: 80 },
+    size: { value: 3 },
+    color: { value: "#ffffff" },
+    line_linked: {
+      enable: true,
+      distance: 150,
+      color: "#ffffff",
+      opacity: 0.4,
+      width: 1
+    },
+    move: { speed: 2 }
+  },
+  interactivity: {
+    events: { onhover: { enable: true, mode: "repulse" } }
+  }
 });
 
-  
-  // Particles.js Load
-  particlesJS("particles-js", {
-    particles: {
-      number: { value: 80 },
-      size: { value: 3 },
-      color: { value: "#ffffff" },
-      line_linked: {
-        enable: true,
-        distance: 150,
-        color: "#ffffff",
-        opacity: 0.4,
-        width: 1
-      },
-      move: { speed: 2 }
-    },
-    interactivity: {
-      events: {
-        onhover: { enable: true, mode: "repulse" }
-      }
-    }
-  });
-
-  function startConfetti() {
-    confetti({
-      particleCount: 150,
-      spread: 70,
-      origin: { y: 0.6 }
-    });
-  }
-  
-
-  
+// Confetti function (can trigger manually)
+function startConfetti() {
+  confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+}
