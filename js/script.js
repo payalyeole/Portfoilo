@@ -1,26 +1,31 @@
 // Navbar toggle
 const hamburger = document.querySelector(".hamburger");
 const navLinks = document.querySelector(".nav-links");
-hamburger?.addEventListener("click", () => {
+
+hamburger.addEventListener("click", () => {
   navLinks.classList.toggle("active");
 });
 
-// Smooth anchor scroll
+// Smooth scroll for anchor links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-  anchor.addEventListener("click", function (e) {
+  anchor.addEventListener('click', function (e) {
     e.preventDefault();
-    const section = document.querySelector(this.getAttribute("href"));
-    section?.scrollIntoView({ behavior: "smooth" });
+    const section = document.querySelector(this.getAttribute('href'));
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' });
+    }
   });
 });
 
-// Contact form alert
+// Alert on contact form submit
 const form = document.querySelector("form");
-form?.addEventListener("submit", function (e) {
-  e.preventDefault();
-  alert("Thank you! Your message has been submitted.");
-  form.reset();
-});
+if (form) {
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    alert("Thank you! Your message has been submitted.");
+    form.reset();
+  });
+}
 
 // Auto testimonial slider
 const testimonials = [
@@ -28,6 +33,7 @@ const testimonials = [
   "Loved working with Payal. Truly professional and creative!",
   "If you're looking for style + substance, she's the one."
 ];
+
 let index = 0;
 function showTestimonial() {
   const tEl = document.querySelector("#testimonial-text");
@@ -36,11 +42,16 @@ function showTestimonial() {
     index = (index + 1) % testimonials.length;
   }
 }
-setInterval(showTestimonial, 4000);
+setInterval(showTestimonial, 4000); // Rotate every 4 seconds
 
-// Navbar background scroll effect
+// Scroll Navbar Background
 window.addEventListener("scroll", () => {
-  document.querySelector(".navbar")?.classList.toggle("scrolled", window.scrollY > 50);
+  const navbar = document.querySelector(".navbar");
+  if (window.scrollY > 50) {
+    navbar.classList.add("scrolled");
+  } else {
+    navbar.classList.remove("scrolled");
+  }
 });
 
 // Scroll progress bar
@@ -48,19 +59,25 @@ window.addEventListener("scroll", () => {
   const scrollBar = document.getElementById("scroll-bar");
   const scrollTop = window.scrollY;
   const docHeight = document.body.scrollHeight - window.innerHeight;
-  scrollBar.style.width = (scrollTop / docHeight) * 100 + "%";
+  const scrollPercent = (scrollTop / docHeight) * 100;
+  scrollBar.style.width = scrollPercent + "%";
 });
 
-// Typed text effect
+// Typed Text Effect - FINAL
 const textArray = ["Java Full Stack Developer", "Frontend Enthusiast", "Problem Solver", "Tech Explorer"];
 let typedText = document.querySelector(".typed-text");
-let i = 0, j = 0, isDeleting = false;
+let i = 0, j = 0, currentText = "", isDeleting = false;
+
 function typeEffect() {
   if (i < textArray.length) {
     if (!isDeleting && j <= textArray[i].length) {
-      typedText.textContent = textArray[i].substring(0, j++);
-    } else if (isDeleting && j >= 0) {
-      typedText.textContent = textArray[i].substring(0, j--);
+      currentText = textArray[i].substring(0, j++);
+      typedText.textContent = currentText;
+    }
+
+    if (isDeleting && j >= 0) {
+      currentText = textArray[i].substring(0, j--);
+      typedText.textContent = currentText;
     }
 
     if (!isDeleting && j === textArray[i].length) {
@@ -75,91 +92,115 @@ function typeEffect() {
   setTimeout(typeEffect, isDeleting ? 50 : 150);
 }
 
-// Popup and typed text init
-window.onload = () => {
-  // Show popup after delay (optional: remove if annoying)
+// Popup + Typed Effect
+window.onload = function () {
+  // Show popup after 5 seconds
   setTimeout(() => {
-    const popup = document.getElementById("popup");
-    if (popup) popup.style.display = "flex";
+    document.getElementById("popup").style.display = "flex";
   }, 5000);
 
+  // Start type effect
   typeEffect();
 };
 
-// Close popup
 function closePopup() {
   document.getElementById("popup").style.display = "none";
 }
 
-// Counter animation (on scroll)
-const counters = document.querySelectorAll(".count");
-let hasCounted = false;
-function animateCount() {
+// Counter animation
+const counters = document.querySelectorAll('.count');
+const speed = 200;
+const animateCount = () => {
   counters.forEach(counter => {
-    const target = +counter.dataset.target;
-    const increment = Math.ceil(target / 200);
-    const update = () => {
-      const current = +counter.innerText;
-      if (current < target) {
-        counter.innerText = current + increment;
-        setTimeout(update, 30);
+    const updateCount = () => {
+      const target = +counter.getAttribute('data-target');
+      const count = +counter.innerText;
+      const increment = Math.ceil(target / speed);
+      if (count < target) {
+        counter.innerText = count + increment;
+        setTimeout(updateCount, 30);
       } else {
         counter.innerText = target;
       }
     };
-    update();
+    updateCount();
   });
-}
-window.addEventListener("scroll", () => {
-  const statsSection = document.getElementById("stats");
-  if (statsSection.getBoundingClientRect().top < window.innerHeight && !hasCounted) {
-    hasCounted = true;
+};
+
+window.addEventListener('scroll', () => {
+  const statsSection = document.getElementById('stats');
+  const top = statsSection.getBoundingClientRect().top;
+  if (top < window.innerHeight - 100) {
     animateCount();
   }
 });
 
-// Back to Top Button
+// Back to Top button
 const backToTopBtn = document.getElementById("backToTop");
 window.addEventListener("scroll", () => {
   backToTopBtn.style.display = window.scrollY > 300 ? "block" : "none";
 });
-backToTopBtn?.addEventListener("click", () => {
+backToTopBtn.addEventListener("click", () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
-// Reveal elements immediately (no scroll required)
-document.querySelectorAll(".reveal").forEach(el => el.classList.add("active"));
+// Reveal Elements on Scroll
+function revealElements() {
+  const reveals = document.querySelectorAll(".reveal");
+  reveals.forEach((el) => {
+    const windowHeight = window.innerHeight;
+    const elementTop = el.getBoundingClientRect().top;
+    const elementVisible = 100;
+    if (elementTop < windowHeight - elementVisible) {
+      el.classList.add("active");
+    }
+  });
+}
+window.addEventListener("scroll", revealElements);
+window.addEventListener("load", revealElements);
 
-// ScrollReveal simplified (if needed at all)
+// ScrollReveal library
 ScrollReveal({
-  distance: "60px",
+  distance: '60px',
   duration: 1000,
   delay: 200,
   reset: false
 });
-ScrollReveal().reveal(".hero h1, .hero p, .hero .btn", { origin: "top" });
-
-// Particles.js init
-particlesJS("particles-js", {
-  particles: {
-    number: { value: 80 },
-    size: { value: 3 },
-    color: { value: "#ffffff" },
-    line_linked: {
-      enable: true,
-      distance: 150,
-      color: "#ffffff",
-      opacity: 0.4,
-      width: 1
-    },
-    move: { speed: 2 }
-  },
-  interactivity: {
-    events: { onhover: { enable: true, mode: "repulse" } }
-  }
+ScrollReveal().reveal('.hero h1, .hero p, .hero .btn', { origin: 'top' });
+ScrollReveal().reveal('.section h2', { origin: 'left' });
+ScrollReveal().reveal('.about-content, .service-cards, .project-grid, .contact form', {
+  origin: 'bottom',
+  interval: 100
 });
 
-// Confetti function (can trigger manually)
-function startConfetti() {
-  confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-}
+  
+  // Particles.js Load
+  particlesJS("particles-js", {
+    particles: {
+      number: { value: 80 },
+      size: { value: 3 },
+      color: { value: "#ffffff" },
+      line_linked: {
+        enable: true,
+        distance: 150,
+        color: "#ffffff",
+        opacity: 0.4,
+        width: 1
+      },
+      move: { speed: 2 }
+    },
+    interactivity: {
+      events: {
+        onhover: { enable: true, mode: "repulse" }
+      }
+    }
+  });
+
+  function startConfetti() {
+    confetti({
+      particleCount: 150,
+      spread: 70,
+      origin: { y: 0.6 }
+    });
+  }
+  
