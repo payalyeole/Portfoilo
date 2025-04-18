@@ -204,3 +204,16 @@ ScrollReveal().reveal('.about-content, .service-cards, .project-grid, .contact f
     });
   }
   
+
+
+  // certificate 
+
+  function openCertificate(src) {
+    document.getElementById("cert-popup-img").src = src;
+    document.getElementById("cert-popup").style.display = "flex";
+  }
+  
+  function closeCertPopup() {
+    document.getElementById("cert-popup").style.display = "none";
+  }
+  
