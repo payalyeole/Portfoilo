@@ -217,3 +217,8 @@ ScrollReveal().reveal('.about-content, .service-cards, .project-grid, .contact f
     document.getElementById("cert-popup").style.display = "none";
   }
   
+  $('.icon-toggle-box').click(function() {
+    var hiddenBox = $(this).siblings('.hidden-elements-box');
+    $(this).toggleClass('clicked');
+    hiddenBox.slideToggle(500, 'swing');
+  });
