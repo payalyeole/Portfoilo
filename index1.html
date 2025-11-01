@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+<div data-showcase-id="41401a77-6ad7-4739-9a01-37eb0f7df5eb" id="companycam-showcase-root"></div>
+<script>
+	(function() {
+		var ccShowcaseRoot = document.getElementById("companycam-showcase-root");
+		if (!ccShowcaseRoot.attachShadow || !window.fetch) {
+			return;
+		}
+		var ccShowcaseRootParent = document.getElementsByTagName("body")[0];
+		var ccShowcaseScript = document.createElement("script");
+		ccShowcaseScript.src = 'https://showcase.companycam.com/bundle.js';
+		ccShowcaseScript.type = "text/javascript";
+		ccShowcaseRootParent.appendChild(ccShowcaseScript);
+	})();
+</script>
+</body>
+</html>
