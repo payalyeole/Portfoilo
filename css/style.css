@@ -909,19 +909,6 @@ body {
     cursor: pointer;
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
   .certificates-section {
     padding: 4rem 2rem;
     background-color: #f9f9f9;
@@ -983,8 +970,10 @@ body {
     margin-right: 10px;
   }
   
-  
-  /* Contact */
+  /* --------- */
+  /*  Contact  */
+  /* ---------*/
+
  /* Section Title */
 .contact-heading {
   text-align: center;
